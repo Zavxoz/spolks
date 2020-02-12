@@ -26,7 +26,7 @@ class Receiver(threading.Thread):
             data = data.decode('utf-8')
             if data == '#init':
                 if addr[0] not in ip_list:
-                    print('<system>: new user enter in chatroom - %s' % (addr[0]))
+                    print('new user enter in chatroom - %s' % (addr[0]))
                     ip_list.append(addr[0])
                     self.s.sendto(str('##init').encode('utf-8'), broadcast)
             elif data == '##init':
@@ -35,7 +35,7 @@ class Receiver(threading.Thread):
             elif data == 'exit':
                 if addr[0] in ip_list:
                     ip_list.remove(addr[0])
-                    print('<system>: user %s leave the chatroom' % (addr[0]))
+                    print('user %s leave the chatroom' % (addr[0]))
             else:
                 if addr[0] not in ip_list:
                     ip_list.append(addr[0])
@@ -56,7 +56,6 @@ class Sender(threading.Thread):
         while not exit_flag:
             msg = input()
             if msg == 'ls':
-                print('<system>: users list')
                 for a in ip_list:
                     print(' - %s' % (a))
             else:
@@ -73,8 +72,6 @@ class Sender(threading.Thread):
         global exit_flag
         exit_flag = True
         self.s.sendto('exit'.encode('utf-8'), broadcast)
-                
-        print('<system>: good bye')
         self.s.close()
         sleep(1)
         try:
@@ -86,7 +83,6 @@ class Sender(threading.Thread):
 def keyboard_interrupt_handler(signal, frame):
     global exit_flag
     exit_flag = True
-    print("\nkeyboard interrupt. exiting")
     sleep(1)
     try:
         sys.exit(1)
@@ -104,7 +100,7 @@ def main():
     my_ip = socket.gethostbyname(socket.gethostname())
     global ip_list
     ip_list.append(my_ip)
-    print('<system>: welcome to chat - %s' % my_ip)
+    print('welcome to chat - %s' % my_ip)
 
     receiver = Receiver(s)
     receiver.start()
